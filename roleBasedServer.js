@@ -1,0 +1,78 @@
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+const allowRoles = require("./middlewares/allowRoles");
+const authenticateToken = require("./middlewares/authenticateToken");
+
+
+const port = process.env.PORT||5000;
+const secretKey = process.env.SECRET_KEY || "elearnwilpbitspilani";
+const saltRounds = 10;
+
+const app = express();
+app.use(bodyParser.json());
+
+// Dummy user data for demonstration
+const users = [
+  { id: 1, username: "user1", password: "password1", role: "admin"},
+  { id: 2, username: "user2", password: "password2", role: "user"},
+];
+
+// Register route
+app.post("/register", (req, res) => {
+  // Mocked registration logic
+  const { username, password, role } = req.body;
+  const user = users.find((u) => u.username === username);
+
+  if (user) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  // Create new user
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password: bcrypt.hashSync(password, saltRounds),
+    role
+  };
+  users.push(newUser);
+
+  res.json({ message: "User registered successfully" });
+});
+
+// Login route
+app.post("/login", (req, res) => {
+  // Mocked authentication logic
+  const { username, password } = req.body;
+  const user = users.find(
+    (u) => u.username === username && bcrypt.compareSync(password, u.password)
+  );
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+  // Generate JWT token
+  const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: "6h" });
+
+  res.json({ token });
+});
+
+
+
+app.get("/admin", authenticateToken, allowRoles('admin'), (req, res) => {
+    res.json({ message: "Admin route accessed successfully" });
+});
+
+app.get("/user", authenticateToken, allowRoles('user', 'admin'), (req, res) => { 
+    res.json({ message: "User route accessed successfully" });
+});
+
+
+app.get("/", (req, res) => {
+  res.send("This is unprotected route.");
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on https://localhost:${port}`);
+});
