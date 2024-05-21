@@ -60,11 +60,11 @@ app.post("/login", (req, res) => {
 
 
 
-app.get("/admin", authenticateToken, allowRoles('admin'), (req, res) => {
+app.get("/admin", authenticateToken, allowRoles(users, 'admin'), (req, res) => {
     res.json({ message: "Admin route accessed successfully" });
 });
 
-app.get("/user", authenticateToken, allowRoles('user', 'admin'), (req, res) => { 
+app.get("/user", authenticateToken, allowRoles(users, ['user', 'admin']), (req, res) => { 
     res.json({ message: "User route accessed successfully" });
 });
 
@@ -74,5 +74,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on https://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
