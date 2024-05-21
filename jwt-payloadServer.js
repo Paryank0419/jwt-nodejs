@@ -19,7 +19,7 @@ const payload = {
     customField2: 'customValue2',
 }
 
-const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
+const token = jwt.sign(payload, secret, { algorithm: 'HS256', expiresIn: '1h'});
 console.log('Generated Token:', token);
 jwt.verify(token, secret, { algorithms: ['HS256'] }, (err, decoded) => {
   if (err) {
@@ -31,7 +31,7 @@ jwt.verify(token, secret, { algorithms: ['HS256'] }, (err, decoded) => {
 
 
 console.log('--------------------------------------------------');
-const token2 = jwt.sign(payload, ecPrivateKey, { algorithm: 'ES256' });
+const token2 = jwt.sign(payload, ecPrivateKey, { algorithm: 'ES256', expiresIn: '1h' });
 console.log('Generated Token:', token2);
 jwt.verify(token2, ecPublicKey, { algorithms: ['ES256'] }, (err, decoded) => {
   if (err) {
