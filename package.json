@@ -4,6 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:exec1": "node jwt-payloadServer.js",
+    "start:exec2pt1": "node userRegServer.js",
+    "start:exec2pt2":"node roleBasedServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

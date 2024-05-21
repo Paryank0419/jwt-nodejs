@@ -32,7 +32,7 @@ jwt.verify(token, secret, { algorithms: ['HS256'] }, (err, decoded) => {
 
 console.log('--------------------------------------------------');
 const token2 = jwt.sign(payload, ecPrivateKey, { algorithm: 'ES256' });
-console.log('Generated Token:', token);
+console.log('Generated Token:', token2);
 jwt.verify(token2, ecPublicKey, { algorithms: ['ES256'] }, (err, decoded) => {
   if (err) {
     console.error('Token verification failed:', err);
